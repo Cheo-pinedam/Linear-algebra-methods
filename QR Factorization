@@ -1,0 +1,56 @@
+%% Section 1
+format long;
+A=hilb(5);
+[n,k] = size(A);
+Q = zeros(n,k);
+% Allocate space for the new orthonormal column vectors.
+for j = 1:k
+% Construct Q matrix column by column.
+    v_j = A(:,j);
+    for p = 1:j-1
+% Construct vj perpendicular to qj.
+        v_j = v_j - (transpose(Q(:,p))*A(:,j))*Q(:,p);
+    end
+    if norm(v_j,2)==0
+% Check if two norm of v j is zero.
+    error("Matrix A is not full rank.");
+    end
+    Q(:,j) = v_j/norm(v_j,2);
+end
+Q
+L=transpose(Q);
+I=eye(5);
+M=(L*Q)-I;
+Error = max(M,[],'all')
+Y=abs(Error)
+
+
+
+%% Section 2
+
+A=hilb(5);
+[n,k] = size(A);
+for j = 1:k
+% Loop through columns of A.
+    if norm(A(:,j),2)==0
+% Check if two norm of jth column of A is zero.
+        error("Matrix A is not full rank.");
+    end
+    A(:,j) = A(:,j)/norm(A(:,j),2);
+% Normalize the jth column of A.
+    for p = j+1:k
+% Subtract out the component of A(:,p) parallel to A(:,j).
+        A(:,p) = A(:,p) - (transpose(A(:,j))*A(:,p))*A(:,j);
+    end
+end
+Q = A;
+
+Q
+L=transpose(Q);
+I=eye(5);
+M=(L*Q)-I;
+Error = max(M,[],'all');
+Y=abs(Error)
+%% Section 3
+A=hilb(5);
+Cond_A=cond(A)
